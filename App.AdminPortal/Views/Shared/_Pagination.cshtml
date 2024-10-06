@@ -1,0 +1,136 @@
+﻿<style type="text/css">
+    /*---Pgination Css----*/
+    .mypagination {
+        padding: 0;
+        width: 100%;
+        height: auto;
+        margin: 10px 0;
+        float: right;
+    }
+
+        .mypagination ul {
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            font-size: 13px;
+            float: right;
+        }
+
+        .mypagination li {
+            list-style-type: none;
+            display: inline;
+            padding-bottom: 1px;
+        }
+
+        .mypagination a, .mypagination a:visited {
+            padding: 8px;
+            border: 1px solid #aaa;
+            text-decoration: none;
+            color: #343a40;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            box-shadow: 0 0 0 #000000, 0 4px 4px #EEEEEE;
+            line-height: 20px;
+        }
+
+            .mypagination a:hover, .mypagination a:active {
+                border: 1px solid #ccc;
+                color: #FFF;
+                background-color: #ccc;
+            }
+
+            .mypagination a.currentpage {
+                background-color: #2e6ab1;
+                color: #FFF !important;
+                border-color: #2b66a5;
+                font-weight: bold;
+                cursor: default;
+            }
+
+            .mypagination a.disablelink, .mypagination a.disablelink:hover {
+                background-color: #fafafa;
+                cursor: default;
+                color: #999;
+                border-color: #cccccc;
+                font-weight: normal !important;
+            }
+
+        .mypagination #pageNo.disctd {
+            display: inline-block;
+            width: 60px !important;
+            text-align: center !important;
+            color: black;
+        }
+    /*---Pgination Css----*/
+</style>
+
+@if (ViewBag.rowCount > 0)
+{
+    <table cellspacing="00" cellpadding="00" border="0" align="center" width="100%">
+        <tr>
+            <td align="right">
+                <div class="mypagination">
+                    <ul>
+                        @if (ViewBag.Page == 1)
+                        {
+                            <li>
+                                <a onclick="return false;" href="JavaScript:void(0);" class="prevnext disablelink m-1">
+                                    «« First
+                                </a>
+                            </li>
+                            <li>
+                                <a onclick="return false;" href="JavaScript:void(0);" class="prevnext disablelink m-1">
+                                    « Prev
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li><a onclick="ChangePage(this, '1');" href="JavaScript:void(0);" class="prevnext m-1">«« First</a></li>
+                            <li>
+                                <a onclick="ChangePage(this, '@Convert.ToInt32(ViewBag.Page - 1)');" href="JavaScript:void(0);" class="prevnext m-1">
+                                    « Prev
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <input type="text" class="disctd prevnext form-control" name="pageNo" id="pageNo" style="text-align: center" size="5" value="@ViewBag.Page" onkeypress="return activate(this, event,'p');" />
+                            &nbsp;/&nbsp; @ViewBag.PageCount
+                        </li>
+                        @if (ViewBag.Page == ViewBag.PageCount)
+                        {
+                            <li>
+                                <a onclick="return false;" href="JavaScript:void(0);" class="prevnext disablelink m-1">
+                                    Next »
+                                </a>
+                            </li>
+                            <li>
+                                <a onclick="return false;" href="JavaScript:void(0);" class="prevnext disablelink m-1">
+                                    Last »»
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a onclick="ChangePage(this, '@Convert.ToInt32(ViewBag.Page + 1)');" href="JavaScript:void(0);" class="prevnext m-1">
+                                    Next »
+                                </a>
+                            </li>
+                            <li>
+                                <a onclick="ChangePage(this, '@Convert.ToInt32(ViewBag.PageCount)');" href="JavaScript:void(0);" class="prevnext m-1">
+                                    Last »»
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    <input type="hidden" name="pageNo" id="pageNo" value="1" />
+}

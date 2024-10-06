@@ -1,0 +1,204 @@
+﻿@model Tuple<List<Root.Models.StoredProcedures.DeviceItems>, Root.Models.StoredProcedures.SFGetDeviceItem>
+@{
+    Root.Models.StoredProcedures.DeviceItems _model = new Root.Models.StoredProcedures.DeviceItems();
+    ViewBag.Index = 1;
+
+}
+<table class="table table-center table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th class="sort-icon">
+               <input type="checkbox" id="selectAll" />
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("SerialNumber", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.SerialNumber)
+                </span>
+
+
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("PoNumber", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.PoNumber)
+                </span>
+
+
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("DeviceDetails", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.DeviceDetails)
+                </span>
+
+
+            </th>
+         
+           
+
+
+
+
+        </tr>
+    </thead>
+    @if (Model.Item1 == null || Model.Item1.Count() == 0)
+    {
+        <tr>
+            <td colspan="100%">
+                <div class="alert alert-info alert-dismissible">
+                    <div>
+                        <i class="icon fa fa-info"></i>
+                        No records found
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+    else
+    {
+        foreach (var item in Model.Item1)
+        {
+            <tr data-receivingdevicedetailid="@item.ReceivingDeviceDetailId">
+
+                <td data-label="Sr No : ">
+                    <input type="checkbox" class="checkbox" />
+                </td>
+                <td data-label="@Html.DisplayNameFor(m => _model.SerialNumber) : ">
+                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                </td>
+                <td data-label="@Html.DisplayNameFor(m => _model.PoNumber) : ">
+                    @Html.DisplayFor(modelItem => item.PoNumber)
+                </td>
+
+                <td data-label="@Html.DisplayNameFor(m => _model.DeviceDetails) : ">
+                    @Html.DisplayFor(modelItem => item.DeviceDetails)
+                </td>
+
+
+
+
+            </tr>
+
+            ViewBag.Index = ViewBag.Index + 1;
+
+        }
+    }
+
+    <tfoot>
+        @{
+
+            await Html.RenderPartialAsync("_Pagination");
+        }
+    </tfoot>
+</table>
+
+<script>
+    $('#selectAll').click(function (e) {
+      //  alert("hello");
+        var table = $(e.target).closest('table');
+        $('td input:checkbox', table).prop('checked', this.checked);
+        
+    });
+
+    $('.checkbox').change(function () {
+        var allChecked = true;
+        $('.checkbox').each(function () {
+            if (!$(this).prop('checked')) {
+                allChecked = false;
+                return false;
+            }
+        });
+        $('#selectAll').prop('checked', allChecked);
+    });
+
+</script>
+<script>
+    function FormsubmitData() {
+        var Bulkcheckboxdata = [];
+       
+        var deviceMovementView = {
+            ReciverInventoryRoleId: $("#ReciverInventoryRoleId").val(),
+            ReciverUserId: $('#ReciverUserId').val(),
+            SendDate: $('#SendDate').val(),
+            QCStatus: $('#QCStatus').val(),
+            QCUserRemarks: $('#QCUserRemarks').val()
+          
+        };
+      
+       
+       
+        $('.checkbox:checked').each(function () {
+            var row = $(this).closest('tr');
+            var receivingDeviceDetailId = row.data('receivingdevicedetailid');
+            
+           
+
+            var record = {
+                Id: receivingDeviceDetailId,
+             
+            };
+
+            Bulkcheckboxdata.push(record);
+        });
+        var data = {
+            DeviceId: Bulkcheckboxdata,
+            deviceMovementView: deviceMovementView
+        }
+       
+        $.ajax({
+            url: '@Url.Action("DeviceDataMove", "DeviceItem")',  
+            method: 'POST',
+            
+            data: data,
+            success: function (response) {
+                if (response.status.isSuccess == true) {
+                    toastr.success(response.status.message);
+                    window.location.href = '@Url.Action("DeviceItemList", "DeviceItem")';
+                    
+
+                }
+                else {
+                    toastr.error(response.status.message);
+                    $("#DeviceMove").hide();
+                   
+
+                }
+
+            }
+        });
+    
+    }
+
+    function Otpsend() {
+        $('#preloader').show();
+        var data = {
+            ReciverUserId: $('#ReciverUserId').val()
+
+        }
+        $.ajax({
+            url: '@Url.Action("OtpSend", "DeviceItem")',
+            data: data,
+            method: 'POST',
+            success: function (response) {
+                if (response.status.isSuccess == true) {
+                    toastr.success(response.status.message);
+                    $("#DeviceMove").hide();
+                    $("#loginmodal").addClass('show');
+                    $("#loginmodal").css("display", "block");
+                    $('#preloader').hide();
+                   // window.location.href = '@Url.Action("DeviceItemList", "DeviceItem")';
+
+
+                }
+                else {
+                    toastr.error(response.status.message);
+
+                    $("#DeviceMove").hide();
+                    $('#preloader').hide();
+
+
+                }
+
+            }
+        });
+    }
+   
+</script>

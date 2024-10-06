@@ -1,0 +1,36 @@
+﻿@using Root.Services;
+
+@if (HttpContextAccessor.HttpContext.Session.GetObject<string>(ProgConstants.SuccMsg).IsNullString() != "")
+{
+	<script type="text/javascript">
+        $(function () {
+            toastr.success('@Html.Raw(HttpContextAccessor.HttpContext.Session.GetString(ProgConstants.SuccMsg).IsNullString().Replace("'","\\'").Replace('"',' '))');
+        })
+	</script>
+	HttpContextAccessor.HttpContext.Session.Remove(ProgConstants.SuccMsg);
+}
+@if (HttpContextAccessor.HttpContext.Session.GetString(ProgConstants.ErrMsg).IsNullString() != "")
+{
+	<script type="text/javascript">
+        $(function () {
+            toastr.error('@Html.Raw(HttpContextAccessor.HttpContext.Session.GetString(ProgConstants.ErrMsg).IsNullString().Replace("'", "\\'").Replace('"',' '))');
+        })
+	</script>
+	HttpContextAccessor.HttpContext.Session.Remove(ProgConstants.ErrMsg);
+}
+@if (ViewBag.ErrMsg != null && ViewBag.ErrMsg != "")
+{
+	<script type="text/javascript">
+        $(function () {
+            toastr.error('@Html.Raw(ViewBag.ErrMsg.Replace("'", "\\'").Replace('"',' '))');
+        });
+	</script>
+}
+@if (ViewBag.SuccMsg != null && ViewBag.SuccMsg != "")
+{
+	<script type="text/javascript">
+        $(function () {
+            toastr.success('@Html.Raw(ViewBag.SuccMsg.Replace("'", "\\'").Replace('"',' '))');
+        });
+	</script>
+}

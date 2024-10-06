@@ -1,0 +1,132 @@
+﻿@model Tuple<List<Root.Models.Tables.BulkFileRecivingDetail>, Root.Models.StoredProcedures.SFGetBulkFileRecivingDetails>
+@{
+    Root.Models.Tables.BulkFileRecivingDetail _model = new Root.Models.Tables.BulkFileRecivingDetail();
+    
+}
+<table class="table table-center table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th class="sort-icon">
+                Sr No
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("PoDetailId", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.PoDetail.PoNumber)
+                </span>
+
+
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("UploadFile", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.UploadFile)
+                </span>
+
+
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("ErrorFile", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.ErrorFile)
+                </span>
+
+
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("TotalUploadRecod", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.TotalUploadRecod)
+                </span>
+
+
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("SuccessRecord", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.SuccessRecord)
+                </span>
+
+
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("ErrorRecord", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.ErrorRecord)
+                </span>
+
+
+            </th>
+           
+
+
+
+
+        </tr>
+    </thead>
+    @if (Model.Item1 == null || Model.Item1.Count() == 0)
+    {
+        <tr>
+            <td colspan="100%">
+                <div class="alert alert-info alert-dismissible">
+                    <div>
+                        <i class="icon fa fa-info"></i>
+                        No records found
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+    else
+    {
+        foreach (var item in Model.Item1)
+        {
+            <tr>
+
+                <td data-label="Sr No : ">
+                    @ViewBag.Index
+                </td>
+                <td data-label="@Html.DisplayNameFor(m => _model.PoDetail.PoNumber) : ">
+                    @Html.DisplayFor(modelItem => item.PoDetail.PoNumber)
+                   
+                </td>
+                <td data-label="@Html.DisplayNameFor(m => _model.UploadFile) : ">
+                    @* @Html.DisplayFor(modelItem => item.UploadFile) *@
+                    <a href="/FileHandling/ViewFile/?id=@item.UploadFile" target="_blank" title="RequestClosedApplicationData.xlsx">View</a>
+                </td>
+               
+                <td data-label="@Html.DisplayNameFor(m => _model.ErrorFile) : ">
+                   @*  @Html.DisplayFor(modelItem => item.ErrorFile) *@
+                    <a href="/FileHandling/ViewFile/?id=@item.ErrorFile" target="_blank" title="RequestClosedApplicationData.xlsx">View</a>
+                </td>
+
+                <td data-label="@Html.DisplayNameFor(m => _model.TotalUploadRecod) : ">
+                    @Html.DisplayFor(modelItem => item.TotalUploadRecod)
+                    
+                </td>
+
+                <td data-label="@Html.DisplayNameFor(m => _model.SuccessRecord) : ">
+                    @Html.DisplayFor(modelItem => item.SuccessRecord)
+                    
+
+              
+                </td>
+
+                <td data-label="@Html.DisplayNameFor(m => _model.ErrorRecord) : ">
+                    @Html.DisplayFor(modelItem => item.ErrorRecord)
+                </td>
+                
+
+
+               
+
+
+
+            </tr>
+
+            ViewBag.Index = ViewBag.Index + 1;
+
+        }
+    }
+
+    <tfoot>
+        @{
+
+            await Html.RenderPartialAsync("_Pagination");
+        }
+    </tfoot>
+</table>

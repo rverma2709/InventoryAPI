@@ -1,0 +1,286 @@
+﻿@* @model Root.Models.ViewModels.DeviceTypeData *@
+@model Tuple<List<Root.Models.Tables.BrandDetail>, Root.Models.StoredProcedures.SFGetBrandDetails>
+@{
+    Root.Models.Tables.BrandDetail _model = new Root.Models.Tables.BrandDetail();
+    IndexModel indexModel = new IndexModel();
+    indexModel.ControllerName = "MasterData";
+    indexModel.ActionName = "BrandDetails";
+}
+@{
+
+    ViewBag.Title = ViewBag.PageModelName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="~/css/tableheader.css" rel="stylesheet" />
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <div class="page-header">
+            <div class="content-page-header">
+                <h5>@ViewBag.Title</h5>
+                <div class="list-btn">
+                    <ul class="filter-list">
+                        <li>
+                            <a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="filter"><span class="me-2"><img src="~/assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+                        </li>
+
+                        <li>
+                            <div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="download">
+                                <a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="fe fe-download"></i></span></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <ul class="d-block">
+                                        <li>
+                                            <a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-pdf me-2"></i>PDF</a>
+                                        </li>
+                                        <li>
+                                            <a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-text me-2"></i>CVS</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="print"><span><i class="fe fe-printer"></i></span> </a>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_inventory"><i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add New</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+
+                    <div class="card-body">
+                        <div class="table-responsive" id="tb">
+
+
+                            @await Html.PartialAsync("_BrandDetailTablePartial", Model)
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="toggle-sidebar">
+    <div class="sidebar-layout-filter">
+        <div class="sidebar-header">
+            <h5>Filter</h5>
+            <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
+        </div>
+        <div class="sidebar-body">
+            <form action="#" autocomplete="off">
+
+                <div class="accordion" id="accordionMain1">
+                    <div class="card-header-new" id="headingOne">
+                        <h6 class="filter-title">
+                            <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Device Name
+                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                            </a>
+                        </h6>
+                    </div>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample1">
+                        <div class="card-body-chat">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="checkBoxes1">
+                                        <div class="form-custom">
+                                            <input type="text" class="form-control" asp-for="Item2.BrandName" placeholder="Search Device Name">
+
+                                            
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="filter-buttons">
+                    <a class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary" onclick="OnChangeSelect()">Apply</a>
+                    @* <button class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary" onclick="OnChangeSelect()">
+                    Apply
+                    </button> *@
+                    <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary">
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!-- #region Add stock -->
+
+<div class="modal custom-modal fade" id="add_inventory" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Add Brand Name</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form asp-action="AddBrandDetails" asp-controller="MasterData" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="input-block mb-3">
+                                <label asp-for="@_model.BrandName"></label>
+                                <input type="text" name="BrandName" class="form-control" placeholder="Device Brand Name">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="input-block mb-3">
+                                <label asp-for="@_model.DeviceType.DeviceName"></label>
+                                <select class="select" asp-items="@(new SelectList(ViewBag.DeviceType, "DeviceTypeId", "DeviceName"))" name="DeviceTypeId">
+                                    <option>Select Value</option>
+                                </select>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</button>
+                    <button type="submit" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- #endregion -->
+
+
+
+
+
+
+<div class="modal custom-modal fade" id="delete_stock" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Delete Inventory</h3>
+                    <p>Are you sure want to delete?</p>
+                </div>
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6">
+                            <a class="btn btn-primary paid-continue-btn" onclick="ConformationDeviceId()">Delete</a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" data-bs-dismiss="modal" class="btn btn-primary paid-cancel-btn">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    var DeviceId = 0;
+    function ChangePage(e, t) {
+        var data = {
+            pageNo: t
+        };
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $('#tb').html(response);
+            },
+            error: function (error) {
+                alert('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+    function CallSort(e, t, a) {
+        debugger;
+        var data = {
+            cols: t,
+            order: a
+        };
+
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $('#tb').html(response);
+            },
+            error: function (error) {
+                alert('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+
+    function OnChangeSelect() {
+        var data = {
+            DeviceName: $("#Item2_DeviceName").val()
+        };
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $('#tb').html(response);
+            },
+            error: function (error) {
+                alert('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+    function RemoveDeviceType(id) {
+
+        DeviceId = id
+
+    }
+    function ConformationDeviceId() {
+        alert(DeviceId);//add_inventory
+        $('#delete_stock').modal('hide');
+        // $('#add_inventory').modal('show');
+        // var data = {
+        //     id: DeviceId
+        // };
+        // $.ajax({
+        //     url: '@Url.Action("RemoveDeviceMaster", "MasterData")', // Corrected Razor syntax for URL
+        //     type: 'POST',
+        //     data: data,
+        //     success: function (response) {
+        //         $('#tb').html(response);
+        //     },
+        //     error: function (error) {
+        //         alert('An error occurred: ' + error.responseText);
+        //     }
+        // });
+    }
+</script>

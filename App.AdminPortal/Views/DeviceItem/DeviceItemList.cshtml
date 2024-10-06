@@ -1,0 +1,204 @@
+﻿@inject AdminPortalStaticService _staticService
+@model Tuple<List<Root.Models.StoredProcedures.DeviceItems>, Root.Models.StoredProcedures.SFGetDeviceItem>
+@{
+    
+    Root.Models.ViewModels.DeviceMovementView deviceMovementView = new Root.Models.ViewModels.DeviceMovementView();
+    deviceMovementView.ReciverInventoryRoleId = _staticService.LoginUser.InventoryRoleId;
+    ViewBag.Title = ViewBag.PageModelName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    IndexModel indexModel = new IndexModel();
+    indexModel.ControllerName = "DeviceItem";
+    indexModel.ActionName = "DeviceItemList";
+}
+<style>
+    .is-invalid {
+        border-color: #dc3545;
+    }
+</style>
+<style type="text/css">
+    .field-validation-error {
+        color: red;
+    }
+</style>
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="page-header">
+                        <div class="content-page-header">
+                            <h5>Device Item List</h5>
+
+                        </div>
+                    
+                        <div class="list-btn">
+                           
+                        </div>
+                  
+                </div>
+                        <form action="#" autocomplete="off">
+
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <div class="form-group-item border-0 mb-0">
+                                        <div class="row align-item-center">
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                <div class="input-block mb-3">
+                                                    <label>Po Number</label>
+                                                    <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.PoDetails, "Value", "Text"))" name="PoDetailId" id="PoDetailId" onchange="FillCustomChildDropDown('PoItemDetilId','GetGramPanchayatData', 'PoDetailId|PoDetailId');" tabindex="-1">
+                                                        <option> select Po Number</option>
+                                                    </select>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                <div class="input-block mb-3">
+                                                    <label>Select Item</label>
+
+
+
+                                                    <select class="form-control select2-container--above" id="PoItemDetilId" tabindex="-1">
+                                                    </select>
+
+
+
+
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+
+                                    <button type="reset" class="btn btn-primary cancel me-2">Cancel</button>
+
+
+                                    <a class="btn btn-primary" onclick="OnChangeSelect()">Show Data</a>
+                            <a class="btn btn-primary" onclick="BulkMoveData()"><i class="fa fa-plus-circle me-2" data-bs-toggle="modal" aria-hidden="true"></i>Move Device</a>
+
+                                </div>
+                            </div>
+
+
+                        </form>
+
+                        <div class="row mt-3" id="ShowTable">
+                            <div class="col-sm-12">
+                                <div class=" card-table">
+                                    <div class="card-body">
+                                        <div class="table-responsive" id="tb">
+
+                                            @await Html.PartialAsync("_DeviceItemTable")
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+    </div>
+</div>
+   
+@await Html.PartialAsync("_DeviceItemMove", deviceMovementView)
+
+<script>
+    var DuplicateCalls = new Array;
+    function FillCustomChildDropDown(id, t, a) {
+
+        
+
+        if ($('#' + id).length == 0)
+            return;
+        var r, i = "FillCustomChildDropDown : " + id + " " + t + " " + a,
+            n = $.grep(DuplicateCalls, (function (e) {
+                return e.fld == i
+            }));
+        if (0 == n.length) {
+            var o = {
+                fld: i,
+                lastCall: new Date
+            };
+            DuplicateCalls.push(o)
+        } else {
+            var l = new Date;
+            if (l.getTime() - n[0].lastCall < 200) return;
+            var s = DuplicateCalls.findIndex((e => e.fld == i));
+            DuplicateCalls[s].lastCall = l
+        }
+        var d = {},
+            c = "";
+        return $(a.split(",")).each((function (e, t) {
+            var a = t.split("|");
+            0 == a.length && a.push(a[0]), 0 == e && (c = $("#" + a[1]).val()), d[a[0]] = $("#" + a[1]).val()
+        })), null != c && "" != c ? $.ajax({
+            url: '@Url.Action("GetGramPanchayatData", "RecivingItem")',
+            method: "POST",
+            async: !1,
+            data: d,
+            success: function (t) {
+                if (1 == t.status.isSuccess) {
+                    var a = JSON.parse(t.data);
+                    InitDropDown(id, a), r = a
+                } else InitDropDown(id, [])
+            }
+        }) : InitDropDown(id, []), r
+    }
+    function InitDropDown(e, t) {
+        var a = $("#" + e);
+
+        a.empty(), a.prop("multiple") || a.append($("<option/>", {
+            value: "",
+            text: "Select "
+        })), $.each(t, (function (e, t) {
+            a.append($("<option/>", {
+                value: t.PoItemDetilId,
+                text: t.Text
+            }))
+        }))// a.val("").trigger("change").trigger("chosen:updated")
+    }
+</script>
+<script>
+    function OnChangeSelect() {
+        $('#preloader').show();
+        var data = {
+            PoDetailId: $("#PoDetailId").val(),
+            PoItemDetilId: $("#PoItemDetilId").val()
+
+        };
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+               
+                $('#tb').html(response);
+                var noRecordsRow = $('#tb').find('tr').find('td:contains("No records found")');
+
+                if (noRecordsRow.length > 0) {
+                    toastr.warning('No records found in the table.');
+                    $('#preloader').hide();
+                } else {
+                    toastr.success('Table data is available.');
+                    $('#preloader').hide();
+                }
+            },
+            error: function (error) {
+                toastr.error('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+    function BulkMoveData() {
+       
+        if ($('.checkbox:checked').length === 0) {
+
+            toastr.error("Please select Device.");
+        } else {
+            $('#DeviceMove').modal('show');
+        }
+
+    }
+</script>

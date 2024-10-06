@@ -1,0 +1,83 @@
+﻿@model Tuple<List<Root.Models.Tables.DeviceModeldetail>, Root.Models.StoredProcedures.SFGetDeviceModeldetails>
+@{
+    Root.Models.Tables.DeviceModeldetail _model = new Root.Models.Tables.DeviceModeldetail();
+    
+}
+<table class="table table-center table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th class="sort-icon">
+                Sr No
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("ModelName", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.ModelName)
+                </span>
+            </th>
+            <th>
+                <span @Html.Raw(CommonLib.GetSortingClass("ModelName", Model.Item2.cols, Model.Item2.order))>
+                    @Html.DisplayNameFor(m => _model.DeviceType.DeviceName)
+                </span>
+            </th>
+            <th class="sort-icon">
+                Action
+            </th>
+        </tr>
+    </thead>
+    @if (Model.Item1 == null || Model.Item1.Count() == 0)
+    {
+        <tr>
+            <td colspan="100%">
+                <div class="alert alert-info alert-dismissible">
+                    <div>
+                        <i class="icon fa fa-info"></i>
+                        No records found
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+    else
+    {
+        foreach (var item in Model.Item1)
+        {
+            <tr>
+
+                <td data-label="Sr No : ">
+                    @ViewBag.Index
+                </td>
+                <td data-label="@Html.DisplayNameFor(m => _model.ModelName) : ">
+                    @Html.DisplayFor(modelItem => item.ModelName)
+                </td>
+                <td data-label="@Html.DisplayNameFor(m => _model.DeviceType.DeviceName) : ">
+                    @Html.DisplayFor(modelItem => item.DeviceType.DeviceName)
+                </td>
+
+                <td class="d-flex align-items-center">
+
+                    <div class="dropdown dropdown-action">
+                        <a href="#" class=" btn-action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <ul>
+                                <li>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_inventory"><i class="far fa-edit me-2"></i>Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_stock"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            ViewBag.Index = ViewBag.Index + 1;
+        }
+    }
+
+    <tfoot>
+        @{
+
+            await Html.RenderPartialAsync("_Pagination");
+        }
+    </tfoot>
+</table>

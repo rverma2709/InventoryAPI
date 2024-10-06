@@ -1,0 +1,257 @@
+﻿@model Tuple<List<Root.Models.Tables.BulkFileRecivingDetail>, Root.Models.StoredProcedures.SFGetBulkFileRecivingDetails>
+@{
+    Root.Models.Tables.BulkFileRecivingDetail _model = new Root.Models.Tables.BulkFileRecivingDetail();
+    
+    IndexModel indexModel = new IndexModel();
+    indexModel.ControllerName = "RecivingItem";
+    indexModel.ActionName = "GetRecivingFile";
+}
+
+@{
+
+    ViewBag.Title = ViewBag.PageModelName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link href="~/css/tableheader.css" rel="stylesheet" />
+<style type="text/css">
+    .field-validation-error {
+        color: red;
+    }
+</style>
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <div class="page-header">
+            <div class="content-page-header ">
+                <h5>@ViewBag.Title</h5>
+                <div class="list-btn">
+                    <ul class="filter-list">
+                        <li>
+                            <a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="filter"><span class="me-2"><img src="~/assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+                        </li>
+                      
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="filter_inputs" class="card filter-card">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Email</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Phone</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class=" card-table">
+                    <div class="card-body">
+                        <div class="table-responsive" id="tb">
+                           
+                            @await Html.PartialAsync("_bulkrecivingfiletable", Model)
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="toggle-sidebar">
+    <div class="sidebar-layout-filter">
+        <div class="sidebar-header">
+            <h5>Filter</h5>
+            <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
+        </div>
+        <div class="sidebar-body">
+            <form action="#" autocomplete="off">
+
+                <div class="accordion accordion-last" id="accordionMain1">
+                    <div class="card-header-new" id="headingOne">
+                        <h6 class="filter-title">
+                            <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Vendors Filter
+                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                            </a>
+                        </h6>
+                    </div>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample1">
+                        <div class="card-body-chat">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="checkBoxes1">
+                                        <div class="form-custom">
+
+                                            <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.PoDetails, "Value", "Text"))" asp-for="Item2.PoDetailId"  tabindex="-1">
+                                                <option> select Po Number</option>
+                                            </select>
+                                           @*  <input type="text" class="form-control" asp-for="Item2.CompanyName" placeholder="Company Name">
+                                            <input type="text" class="form-control" asp-for="Item2.ContactNo1" placeholder="Phone No">
+                                            <input type="text" class="form-control" asp-for="Item2.EmailId" placeholder="EmailId">
+                                            <input type="text" class="form-control" asp-for="Item2.GSTNo" placeholder="GSTNo"> *@ 
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-buttons">
+                    <a class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary" onclick="OnChangeSelect()">Apply</a>
+                    <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary">
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="modal custom-modal fade" id="add_ledger" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Add Ledger</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form action="#">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Amount</label>
+                                <input type="text" class="form-control" placeholder="Enter Amount">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Date</label>
+                                <div class="cal-icon cal-icon-info">
+                                    <input type="text" class="datetimepicker form-control" placeholder="Select Date">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Reference</label>
+                                <input type="text" class="form-control" placeholder="Enter Reference Number">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block d-inline-flex align-center mb-0">
+                                <label class="me-5 mb-0">Mode</label>
+                                <div>
+                                    <label class="custom_radio me-3 mb-0">
+                                        <input type="radio" name="payment" checked>
+                                        <span class="checkmark"></span> Credit
+                                    </label>
+                                    <label class="custom_radio mb-0">
+                                        <input type="radio" name="payment">
+                                        <span class="checkmark"></span> Debit
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</button>
+                    <button type="submit" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ChangePage(e, t) {
+        var data = {
+            pageNo: t
+        };
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $('#tb').html(response);
+            },
+            error: function (error) {
+                alert('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+    function CallSort(e, t, a) {
+        debugger;
+        var data = {
+            cols: t,
+            order: a
+        };
+
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $('#tb').html(response);
+            },
+            error: function (error) {
+                alert('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+    function OnChangeSelect() {
+        var data = {
+            PoDetailId: $("#Item2_PoDetailId").val(),
+            // CompanyName: $("#Item2_CompanyName").val(),
+            // ContactNo1: $("#Item2_ContactNo1").val(),
+            // EmailId: $("#Item2_EmailId").val(),
+            // GSTNo: $("#Item2_GSTNo").val()
+        };
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $('#tb').html(response);
+            },
+            error: function (error) {
+                alert('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,37 @@
+﻿.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    .table th, .table td {
+        border: 1px solid #dee2e6;
+        padding: 8px;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+.sort-icon {
+    /*float: right;
+    margin-left: 10px;*/
+}
+
+    .sort-icon::after {
+        content: '⇅'; /* Neutral icon shown initially */
+        font-size: 12px;
+        color: #888;
+    }
+
+th.sort-asc .sort-icon::after {
+    content: '▲'; /* Ascending sort icon */
+    color: #000;
+}
+
+th.sort-desc .sort-icon::after {
+    content: '▼'; /* Descending sort icon */
+    color: #000;
+}

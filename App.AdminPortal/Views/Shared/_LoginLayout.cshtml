@@ -1,0 +1,99 @@
+﻿
+<!DOCTYPE html>
+<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="light" data-sidebar-size="lg" data-sidebar-image="none">
+
+<!-- Mirrored from kanakku.dreamstechnologies.com/html/template/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 21 Aug 2024 11:05:21 GMT -->
+<head>
+
+   @*  <meta property="og:image" content="../../assets/img/kanakku.html">
+    <meta property="og:image:secure_url" content="../../assets/img/kanakku.html"> *@
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="600">
+    <title>Rentfoxxy -Admin</title>
+    <style>
+        /* Preloader styling */
+        #preloader {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            text-align: center;
+        }
+
+            #preloader .loader {
+                border: 16px solid #f3f3f3; /* Light grey */
+                border-top: 16px solid #3498db; /* Blue */
+                border-radius: 50%;
+                width: 120px;
+                height: 120px;
+                animation: spin 2s linear infinite;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+    </style>
+    <link rel="shortcut icon" href="~/assets/img/l.png">
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/all.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    
+    <link href="~/css/toastr.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+    <script src="~/assets/js/jquery-3.7.1.min.js" type="26810ea08a8237e6cff40ba4-text/javascript"></script>
+  
+    <script src="~/assets/js/layout.js" type="26810ea08a8237e6cff40ba4-text/javascript"></script>
+
+</head>
+<body>
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <div class="main-wrapper login-body">
+        <div class="login-wrapper">
+            @RenderBody()
+        </div>
+    </div>
+
+
+
+   @*  <a href="~/lib/jquery/dist/jquery.min.map">~/lib/jquery/dist/jquery.min.map</a> *@
+    
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/toastr.js"></script>
+
+    <script src="~/assets/js/bootstrap.bundle.min.js" type="26810ea08a8237e6cff40ba4-text/javascript"></script>
+
+    <script src="~/assets/js/theme-settings.js" type="26810ea08a8237e6cff40ba4-text/javascript"></script>
+    <script src="~/assets/js/greedynav.js" type="26810ea08a8237e6cff40ba4-text/javascript"></script>
+
+    <script src="~/assets/js/script.js" type="26810ea08a8237e6cff40ba4-text/javascript"></script>
+    
+    @* <script src="~/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="26810ea08a8237e6cff40ba4-|49" defer></script> *@
+</body>
+
+
+</html>

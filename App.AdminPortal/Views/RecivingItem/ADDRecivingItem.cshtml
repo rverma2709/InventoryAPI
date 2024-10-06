@@ -1,0 +1,187 @@
+﻿@model Root.Models.ViewModels.RecivingItemView
+@using Root.Models.StoredProcedures
+@using Root.Services.DBContext
+@{
+
+    ViewBag.Title = ViewBag.PageModelName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<style>
+    .is-invalid {
+        border-color: #dc3545;
+    }
+</style>
+<style type="text/css">
+    .field-validation-error {
+        color: red;
+    }
+</style>
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="page-header">
+                    <div class="content-page-header">
+                        <h5>Recive Items</h5>
+                    </div>
+                </div>
+                <form asp-action="ADDRecivingItem" asp-controller="RecivingItem" method="post" id="recivingForm" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group-item border-0 mb-0">
+                                <div class="row align-item-center">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="input-block mb-3">
+                                            <label>Po Number</label>
+                                            <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.PoDetails, "Value", "Text"))" asp-for="PoDetailId" onchange="FillCustomChildDropDown('PoItemDetilId','GetGramPanchayatData', 'PoDetailId|PoDetailId');" tabindex="-1">
+                                                <option> select Po Number</option>
+                                            </select>
+                                            <p>
+                                                @Html.ValidationMessageFor(u => u.PoDetailId)
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="input-block mb-3">
+                                            <label>Select Item</label>
+
+
+
+                                            <select class="form-control select2-container--above" asp-for="PoItemDetilId" id="PoItemDetilId" tabindex="-1" >
+                                            </select>
+
+                                            <p>
+                                                @Html.ValidationMessageFor(u => u.PoItemDetilId)
+                                            </p>
+
+
+
+                                        </div>
+                                    </div>
+                                  
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="input-block mb-3">
+                                            <label>Reciving Date</label>
+                                            <div class="cal-icon cal-icon-info">
+                                                <input type="text" asp-for=RecivingDate class="datetimepicker form-control" placeholder="Reciving Date">
+                                                <p>
+                                                    @Html.ValidationMessageFor(u => u.RecivingDate)
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="input-block mb-3">
+                                            <label>Seriol Number</label>
+
+                                            <input type="text" class="form-control" placeholder="Reciving Quantity" id="SeriolNumber" name="SeriolNumber" required>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <button type="reset" class="btn btn-primary cancel me-2">Cancel</button>
+
+                            <button type="submit" class="btn btn-primary">Save & Send</button>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@* <script>
+    $(document).ready(function () {
+        $('#recivingForm').on('submit', function (e) {
+            e.preventDefault();  // Prevent default form submission
+
+            var formData = new FormData(this); // Create FormData object from form
+
+            $.ajax({
+                url: '@Url.Action("Reciving", "RecivingItem")', // URL to the controller action
+                type: 'POST',
+                data: formData,
+                processData: false,  // Important for file uploads
+                contentType: false,  // Important for file uploads
+                success: function (response) {
+                    alert("Form submitted successfully!");
+                    // Handle success, e.g., show a success message or redirect
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Error: " + errorThrown);
+                    // Handle error, e.g., show an error message
+                }
+            });
+        });
+    });
+
+
+</script> *@
+<script>
+    var DuplicateCalls = new Array;
+    function FillCustomChildDropDown(id, t, a) {
+
+        
+
+        if ($('#' + id).length == 0)
+            return;
+        var r, i = "FillCustomChildDropDown : " + id + " " + t + " " + a,
+            n = $.grep(DuplicateCalls, (function (e) {
+                return e.fld == i
+            }));
+        if (0 == n.length) {
+            var o = {
+                fld: i,
+                lastCall: new Date
+            };
+            DuplicateCalls.push(o)
+        } else {
+            var l = new Date;
+            if (l.getTime() - n[0].lastCall < 200) return;
+            var s = DuplicateCalls.findIndex((e => e.fld == i));
+            DuplicateCalls[s].lastCall = l
+        }
+        var d = {},
+            c = "";
+        return $(a.split(",")).each((function (e, t) {
+            var a = t.split("|");
+            0 == a.length && a.push(a[0]), 0 == e && (c = $("#" + a[1]).val()), d[a[0]] = $("#" + a[1]).val()
+        })), null != c && "" != c ? $.ajax({
+            url: '@Url.Action("GetGramPanchayatData", "RecivingItem")',
+            method: "POST",
+            async: !1,
+            data: d,
+            success: function (t) {
+                if (1 == t.status.isSuccess) {
+                    var a = JSON.parse(t.data);
+                    InitDropDown(id, a), r = a
+                } else InitDropDown(id, [])
+            }
+        }) : InitDropDown(id, []), r
+    }
+    function InitDropDown(e, t) {
+        var a = $("#" + e);
+
+        a.empty(), a.prop("multiple") || a.append($("<option/>", {
+            value: "",
+            text: "Select "
+        })), $.each(t, (function (e, t) {
+            a.append($("<option/>", {
+                value: t.PoItemDetilId,
+                text: t.Text
+            }))
+        }))// a.val("").trigger("change").trigger("chosen:updated")
+    }
+</script>
+
+

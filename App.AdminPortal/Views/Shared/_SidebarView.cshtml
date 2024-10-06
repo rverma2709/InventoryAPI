@@ -1,0 +1,97 @@
+﻿<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <nav class="greedys sidebar-horizantal">
+                <ul class="list-inline-item list-unstyled links">
+                    <li class="menu-title"><span>Main</span></li>
+                    <li class="submenu">
+                        <a href="#"><i class="fe fe-home"></i> <span> Master</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="@Url.Action("DeviceMaster","MasterData")" class="active">Device Type</a></li>
+                            <li><a href="@Url.Action("DeviceModelMaster","MasterData")" class="active">Device Model Type</a></li>
+                            <li><a href="@Url.Action("BrandDetails","MasterData")" class="active">Brand Details</a></li>
+                            <li><a href="@Url.Action("DeviceProcessorDetails","MasterData")" class="active">Device Processor</a></li>
+                            <li><a href="@Url.Action("GenerationDetails","MasterData")" class="active">Generation Detail</a></li>
+                            <li><a href="@Url.Action("RAMDetails","MasterData")" class="active">RAM Detail</a></li>
+                            <li><a href="@Url.Action("HardDiskDetails","MasterData")" class="active">HardDisk Detail</a></li>
+                            <li><a href="@Url.Action("ProcurementTypes","MasterData")" class="active">Procurement Types</a></li>
+                        </ul>
+                        
+                        
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fe fe-grid"></i> <span> Vendor Master</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="@Url.Action("VendorDetails","VendorMaster")" class="active">Vendor Details</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fe fe-grid"></i> <span>PO Details</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="@Url.Action("LaptopPoCreate","PoMaster")" class="active"> ADD Laptop Po</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fe fe-grid"></i> <span>Reciving Master</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="@Url.Action("ADDRecivingItem","RecivingItem")" class="active">Add Item</a></li>
+                            <li><a href="@Url.Action("Reciving","RecivingItem")" class="active">Bulk Upload</a></li>
+                            <li><a href="@Url.Action("GetRecivingFile","RecivingItem")" class="active">Bulk File List</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fe fe-grid"></i> <span> Device Details</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="@Url.Action("DeviceItemList","DeviceItem")" class="active">Device Data</a></li>
+                        </ul>
+                    </li>
+                  
+                </ul>
+              
+            </nav>
+            <ul class="sidebar-vertical">
+
+                <li class="menu-title"><span>Main</span></li>
+                <li class="submenu">
+                    <a href="#"><i class="fe fe-home"></i> <span> Master</span> <span class="menu-arrow"></span></a>
+                    <ul style="display: none;">
+                        <li><a href="@Url.Action("DeviceMaster","MasterData")">Device Type</a></li>
+                        <li><a href="@Url.Action("DeviceModelMaster","MasterData")" >Device Model Type</a></li>
+                        <li><a href="@Url.Action("BrandDetails","MasterData")" >Brand Details</a></li>
+                        <li><a href="@Url.Action("DeviceProcessorDetails","MasterData")" >Device Processor</a></li>
+                        <li><a href="@Url.Action("GenerationDetails","MasterData")" >Generation Detail</a></li>
+                        <li><a href="@Url.Action("RAMDetails","MasterData")" >RAM Detail</a></li>
+                        <li><a href="@Url.Action("HardDiskDetails","MasterData")" >HardDisk Detail</a></li>
+                        <li><a href="@Url.Action("ProcurementTypes","MasterData")">Procurement Types</a></li>
+                    </ul>
+
+                    <a href="#"><i class="fe fe-home"></i> <span> Vendor Master</span> <span class="menu-arrow"></span></a>
+                    <ul >
+                        <li><a  href="@Url.Action("VendorDetails","VendorMaster")">Vendor Details</a></li>
+                        
+                    </ul>
+                    <a href="#"><i class="fe fe-home"></i> <span> PO Details</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="@Url.Action("LaptopPoCreate","PoMaster")">Add Laptop Po</a></li>
+
+                    </ul>
+                    <a href="#"><i class="fe fe-home"></i> <span> Reciving Master</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="@Url.Action("ADDRecivingItem","RecivingItem")">Add Item</a></li>
+                        <li><a href="@Url.Action("Reciving","RecivingItem")">Bulk Upload</a></li>
+                        <li><a href="@Url.Action("GetRecivingFile","RecivingItem")">Bulk File List</a></li>
+
+                    </ul>
+                    <a href="#"><i class="fe fe-home"></i> <span> Device Details</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="@Url.Action("DeviceItemList","DeviceItem")">Device Data</a></li>
+
+                    </ul>
+                   
+                </li>
+  
+
+            </ul>
+        </div>
+    </div>
+</div>

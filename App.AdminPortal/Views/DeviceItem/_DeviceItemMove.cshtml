@@ -1,0 +1,210 @@
+﻿@inject AdminPortalStaticService _staticService
+@model Root.Models.ViewModels.DeviceMovementView
+
+
+
+<div class="modal fade" id="DeviceMove" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-modal="true">
+@* <div class="modal custom-modal fade" id="DeviceMove" role="dialog"> *@
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Device Movement</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form  method="post">
+                @Html.AntiForgeryToken();
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="modal-body p-12">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="InventoryRole.RoleName"></label>
+                                <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.InventoryRoles, "InventoryRoleId", "RoleName"))" asp-for="ReciverInventoryRoleId" id="ReciverInventoryRoleId" tabindex="-1" onchange="UserData('ReciverUserId','GetUserdata', 'ReciverInventoryRoleId|ReciverInventoryRoleId');">
+                                    <option value="" disabled selected> Select Role</option>
+                                </select>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-4" id="UserNameBlock">
+                            <div class="mb-3">
+                                <label >User Name</label>
+                                <select class="form-control form-small select" asp-for="ReciverUserId" id="ReciverUserId" name="ReciverUserId" tabindex="-1">
+                                    <option value="" disabled selected> Select User</option>
+                                </select>
+                                <p>
+                                    @Html.ValidationMessageFor(u => u.ReciverUserId)
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="SendDate"></label>
+                                <div class="cal-icon cal-icon-info">
+                                    <input type="text" asp-for=SendDate class="datetimepicker form-control" placeholder="Purchase Date" id="SendDate">
+                                    <p>
+                                        @Html.ValidationMessageFor(u => u.SendDate)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @{
+                        if (_staticService.LoginUser.InventoryRoleId==3)
+                        {
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label>QC status</label>
+                                                <select class="form-control form-small select" asp-for="QCStatus" tabindex="-1" id="QCStatus">
+                                                    <option> Select Status</option>
+                                                    <option value=true> Yes</option>
+                                                    <option value=false> No</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label>QC Remarks</label>
+                                                <textarea class="form-control" asp-for="QCUserRemarks" placeholder="QC Remarks" id="QCUserRemarks"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                        }
+                    }
+
+                   
+                 
+                   
+                </div>
+            
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</button>
+                    
+                    
+                    <button type="button" class="btn btn-primary paid-continue-btn" onclick="Otpsend()">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="loginmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+               
+                
+                    <div class="mb-3">
+                        <label for="emailaddress1" class="form-label">Please Enter OTP</label>
+                        <input class="form-control" type="number" id="OTP" required >
+                    </div>
+                  
+                    <div class="mb-2 text-center">
+                  @*   <button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2" onclick="">Cancel</button> *@
+                    <button class="btn rounded-pill btn-primary" onclick="OtpVerification()">Confoirm</button>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   
+
+    var DuplicateCallchecks = new Array;
+    function UserData(id, t, a) {
+        if ($("#ReciverInventoryRoleId").val() == 4) {
+
+            $("#UserNameBlock").css("display", "none");
+            return;
+        }
+        
+
+        if ($('#' + id).length == 0)
+            return;
+        var r, i = "UserData : " + id + " " + t + " " + a,
+            n = $.grep(DuplicateCallchecks, (function (e) {
+                return e.fld == i
+            }));
+        if (0 == n.length) {
+            var o = {
+                fld: i,
+                lastCall: new Date
+            };
+            DuplicateCallchecks.push(o)
+        } else {
+            var l = new Date;
+            if (l.getTime() - n[0].lastCall < 200) return;
+            var s = DuplicateCallchecks.findIndex((e => e.fld == i));
+            DuplicateCallchecks[s].lastCall = l
+        }
+        var d = {},
+            c = "";
+        return $(a.split(",")).each((function (e, t) {
+            var a = t.split("|");
+            0 == a.length && a.push(a[0]), 0 == e && (c = $("#" + a[1]).val()), d[a[0]] = $("#" + a[1]).val()
+        })), null != c && "" != c ? $.ajax({
+            url: '@Url.Action("GetUserList", "DeviceItem")',
+            method: "POST",
+            async: !1,
+            data: d,
+            success: function (t) {
+                if (1 == t.status.isSuccess) {
+                    var a = JSON.parse(t.data);
+                    ReciverUserIdInitDropDown(id, a), r = a
+                } else ReciverUserIdInitDropDown(id, [])
+            }
+        }) : ReciverUserIdInitDropDown(id, []), r
+    }
+    function ReciverUserIdInitDropDown(e, t) {
+        var a = $("#" + e);
+
+        a.empty(), a.prop("multiple") || a.append($("<option/>", {
+            value: "",
+            text: "Select "
+        })), $.each(t, (function (e, t) {
+            a.append($("<option/>", {
+                value: t.ReciverUserId,
+                text: t.Text
+            }))
+        }))// a.val("").trigger("change").trigger("chosen:updated")
+    }
+</script>
+<script>
+           
+    function OtpVerification() {
+        $('#preloader').show();
+        var data = {
+            OTP: $("#OTP").val(),
+            ReciverUserId: $('#ReciverUserId').val()
+          
+        }
+        $.ajax({
+            url: '@Url.Action("OtpVerification", "DeviceItem")',
+            method: 'POST',
+
+            data: data,
+            success: function (response) {
+                if (response.status.isSuccess == true) {
+                    toastr.success(response.status.message);
+                    FormsubmitData();
+                    $('#preloader').hide();
+
+                }
+                else {
+                    toastr.error(response.status.message);
+                    $('#preloader').hide();
+
+
+                }
+
+            }
+        });
+    }
+</script>

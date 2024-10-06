@@ -1,0 +1,495 @@
+﻿@model Root.Models.ViewModels.PoDetailView
+@{
+
+    ViewBag.Title = ViewBag.PageModelName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Root.Models.ViewModels.PoItemDetil _model = new Root.Models.ViewModels.PoItemDetil();
+}
+<style>
+    .is-invalid {
+        border-color: #dc3545;
+    }
+</style>
+<style type="text/css">
+    .field-validation-error {
+        color: red;
+    }
+</style>
+<div class="page-wrapper" data-select2-id="18" style="min-height: 341px;">
+    <div class="content container-fluid" data-select2-id="17">
+        <div class="card mb-0" data-select2-id="16">
+            <form asp-action="LaptopPoCreate" asp-controller="PoMaster" method="post" id="po-form">
+            <div class="card-body" data-select2-id="15">
+                <div class="page-header">
+                    <div class="content-page-header">
+                        <h5>Laptop PO Create</h5>
+                    </div>
+                </div>
+                <div class="row" data-select2-id="14">
+                    <div class="col-md-12" data-select2-id="13">
+                        <div class="form-group-item" data-select2-id="12">
+                  
+                            <div class="row" data-select2-id="11">
+                               
+                               
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="input-block mb-3">
+                                        <label asp-for="VendorDetail.VendorName"></label>
+                                            <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.vendorDetails, "InventoryUserId", "CompanyName"))" name="VendorDetailId">
+                                            
+                                        </select>
+                                            <p>
+                                                @Html.ValidationMessageFor(u => u.VendorDetailId)
+                                            </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="input-block mb-3">
+                                        <label asp-for="ProcurementType.ProcurementNameType"></label>
+                                            <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.procurementTypes, "ProcurementTypeId", "ProcurementNameType"))" name="ProcurementTypeId" onchange="AccordingtoProcurementType()" id="ProcurementTypeId">
+                                           
+                                        </select>
+                                    </div>
+                                </div>
+                               
+                               
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="input-block mb-3">
+                                       
+                                        <label asp-for="PurchaseDate"></label>
+                                        <div class="cal-icon cal-icon-info">
+                                        <input type="text" asp-for=PurchaseDate class="datetimepicker form-control" placeholder="Purchase Date">
+                                                <p>
+                                                    @Html.ValidationMessageFor(u => u.PurchaseDate)
+                                                </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                               
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="input-block mb-3">
+
+                                            <label asp-for="DeliveryDate"></label>
+                                            <div class="cal-icon cal-icon-info">
+                                                <input type="text" asp-for=DeliveryDate class="datetimepicker form-control" placeholder="Purchase Date">
+                                                <p>
+                                                    @Html.ValidationMessageFor(u => u.DeliveryDate)
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                               
+                               
+                                <div class="col-lg-4 col-md-6 col-sm-12" id="Rentdiv" style="display:none">
+                                    <div class="input-block mb-3">
+
+                                        <label asp-for="RentStartDate"></label>
+                                        <div class="cal-icon cal-icon-info">
+                                            <input type="text" asp-for=RentStartDate class="datetimepicker form-control" placeholder="Rent Start Date">
+                                                <p>
+                                                    @Html.ValidationMessageFor(u => u.RentStartDate)
+                                                </p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-12">
+                                    <div class="input-block mb-3">
+
+                                        <label asp-for="Tenure"></label>
+                                        <input type="text" asp-for=Tenure class="form-control" placeholder="Tenure">
+                                    </div>
+
+                                </div>
+                                    <div class="col-lg-2 col-md-6 col-sm-12" style="display:block" id="Warrantydiv">
+                                    <div class="input-block mb-3">
+                                        <label asp-for="Warranty"></label>
+                                            <input type="number" asp-for=Warranty class="form-control Quantity" id="Warranty" placeholder="Warranty">
+                                    </div>
+                                </div>
+                               
+                               
+                              
+                                
+                              </div>
+                         </div>
+                    </div>
+                        
+
+                   
+                </div>
+                  
+                    
+                          
+                               
+                     
+                                        <!-- Header 1-->
+                <!-- Add Row Button -->
+                <div class="mt-12">
+                    <button type="button" class="btn btn-primary" id="add-row">Add Item</button>
+                </div>
+                    <!-- Repeater Body class="form-control form-small select" -->
+                    <div class="form-group-item" data-select2-id="12" id="repeater">
+                        <div class="row repeater-item" data-select2-id="11">
+                            <!-- Brand Name -->
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label asp-for="@_model.BrandDetail.BrandName"></label>
+                                    <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.brandDetails, "BrandDetailId", "BrandName"))" name="BrandDetailId" required>
+                                    </select>
+                                    <div class="invalid-feedback">*</div>
+                                </div>
+                            </div>
+                            <!-- Model Name -->
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label asp-for="@_model.Modeldetail.ModelName"></label>
+                                    <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.modeldetails, "DeviceModeldetailId", "ModelName"))" name="DeviceModelDetailId" required>
+                                    </select>
+                                    <div class="invalid-feedback">*</div>
+                                </div>
+                            </div>
+                            <!-- Processor -->
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                <div class="input-block mb-3 add-products">
+                                    <label asp-for="@_model.DeviceProcessorDetail.DeviceProcessorName"></label>
+                                    <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.deviceProcessorDetails, "DeviceProcessorDetailId", "DeviceProcessorName"))" name="DeviceProcessorDetailId" required>
+                                    </select>
+                                    <div class="invalid-feedback">*</div>
+                                </div>
+                            </div>
+                            <!-- Generation -->
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label asp-for="@_model.GenerationDetail.GenerationName"></label>
+                                    <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.generationDetails, "GenerationDetailId", "GenerationName"))" name="GenerationDetailId" required>
+                                    </select>
+                                    <div class="invalid-feedback">*</div>
+                                </div>
+                            </div>
+                            <!-- RAM -->
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label asp-for="@_model.RAMDetail.RAMSize"></label>
+                                    <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.rAMDetails, "RAMDetailId", "RAMSize"))" name="RAMDetailId" required>
+                                    </select>
+                                    <div class="invalid-feedback">*</div>
+                                </div>
+                            </div>
+                            <!-- Hard Disk -->
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label asp-for="@_model.HardDiskDetail.HardDiskSize"></label>
+                                    <select class="form-control form-small select" asp-items="@(new SelectList(ViewBag.hardDiskDetails, "HardDiskDetailId", "HardDiskInfo"))" name="HardDiskDetailId" required>
+                                    </select>
+                                    <div class="invalid-feedback">*</div>
+                                </div>
+                            </div>
+                            <!-- Quantity -->
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Quantity</label>
+                                    <input type="number" class="form-control Quantity" name="Quantity" required>
+                                </div>
+                            </div>
+                            <!-- Price -->
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Price</label>
+                                    <input type="number" class="form-control Pricedata" name="Price" required>
+                                </div>
+                            </div>
+                           
+                            <!-- Description -->
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label for="field-7">Description</label>
+                                    <textarea class="form-control" name="Description" placeholder="Write Vendor Address" required></textarea>
+                                </div>
+                            </div>
+                            <!-- Remove Button -->
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label></label>
+                                    <button type="button" class="btn btn-danger remove-row">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+               
+
+                <!-- Submit Button -->
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-lg-7">
+                                <div class="input-block mb-3">
+                                        <label for="DiscountType">Discount Type</label>
+                                        <select class="form-control form-small select" asp-for=DiscountType id="DiscountType" onchange="updateTotalAmount()">
+                                        <option value="1">Percentage(%)</option>
+                                        <option value="2">Fixed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="input-block mb-3">
+                                    <label>Discount(%)</label>
+                                        <input type="text" class="form-control" placeholder="10" asp-for="Discount" id="Discount" value="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  @*   <div class="col-md-4">
+                        <div class="input-block mb-3">
+                            <label>Tax</label>
+                                <select class="select" >
+                                <option>No Tax</option>
+                                <option>IVA - (21%)</option>
+                                <option>IRPF - (-15%)</option>
+                                <option>PDV - (20%)</option>
+                            </select>
+                        </div>
+                    </div> *@
+                    <div class="col-md-4"></div>
+                </div>
+
+
+                <div class="form-group-item border-0 p-0">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="form-group-bank">
+                               
+                                <div class="input-block mb-3 notes-form-group-info">
+                                    <label>Notes</label>
+<textarea class="form-control" placeholder="Enter Notes" asp-for="Notes"></textarea>
+                                </div>
+                                <div class="input-block mb-3 notes-form-group-info mb-0">
+                                    <label>Terms and Conditions</label>
+<textarea class="form-control" placeholder="Enter Terms and Conditions" asp-for="TermsAndConditions"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="form-group-bank">
+                                <div class="invoice-total-box">
+                                    <div class="invoice-total-inner">
+                                            <p>Taxable Amount <span>&#8377;<b id="TaxableAmountText">0.00</b></span></p>
+                                            <input type="hidden" id="TaxableAmount" value="0" asp-for="TaxableAmount" />
+                                            <input type="hidden" id="ActualAmount" value="0" asp-for="ActualAmount" />
+                                            <p>Discount <span>-&#8377;<b id="DiscountAmt">0.00</b></span></p>
+                                            <p>SGST(9%) <span>&#8377;<b id="SGST">0.00</b></span></p>
+                                            <p>CGST(9%) <span>&#8377;<b id="CGST">0.00</b></span></p>
+                                        
+                                    </div>
+                                    <div class="invoice-total-footer">
+                                            <h4>Total Amount <span>&#8377;<b id="TotalAmountText">0.00</b></span></h4>
+                                            <input type="hidden" id="TotalAmount" value="0" asp-for="TotalAmount" />
+                                    </div>
+                                </div>
+                                <div class="input-block mb-3">
+                                    <label>Signature Name</label>
+                                    <input type="text" class="form-control" placeholder="Enter Signature Name" asp-for="SignatureName">
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+               <button type="reset" class="btn btn-primary cancel me-2">
+                   Cancel
+               </button>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                   Generate PO
+               </button>
+        
+                                    
+                               
+                            
+                   
+            </div>
+         </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        //$('.select').select2();
+        // Add Row functionality
+        $('#add-row').click(function () {
+            var repeaterItem = $('.repeater-item').first();
+
+            //Destroy Select2 instance to remove extra wrappers
+            repeaterItem.find('.select2.select2-container.select2-container--default').each(function () {
+               // alert("h");
+                $(this).remove(); // Destroy select2 for each select element
+            });
+
+
+            // Clone the row after Select2 destruction
+            var newRow = repeaterItem.clone();
+
+            // Reset the input and select fields in the cloned row
+            newRow.find('input').val('');
+            newRow.find('textarea').val('');
+            newRow.find('select').val(''); // Reset dropdowns
+
+            // Append the new row to the repeater container
+            $('#repeater').append(newRow);
+
+            // Reinitialize Select2 for both existing and newly added select elements
+            newRow.find('select').select2();
+            // Enable the remove button for all but the last row
+            toggleRemoveButton();
+        });
+
+        // Remove Row functionality
+        $('#repeater').on('click', '.remove-row', function () {
+            if ($('#repeater .repeater-item').length > 1) {
+                $(this).closest('.repeater-item').remove();
+                toggleRemoveButton();
+            }
+        });
+        $('#repeater').on('blur', '.Quantity', updateTotalAmount);
+
+        $('#repeater').on('blur', '.Pricedata', updateTotalAmount);
+        $('#Discount').on('blur', updateTotalAmount);
+       
+
+       
+        // Toggle the remove button visibility for the last row
+        function toggleRemoveButton() {
+            var rowCount = $('#repeater .repeater-item').length;
+            $('#repeater .remove-row').each(function () {
+                if (rowCount === 1) {
+                    $(this).prop('disabled', true);
+                } else {
+                    $(this).prop('disabled', false);
+                }
+            });
+        }
+
+        // Submit button to gather the repeater data and validate
+        $('#submit-btn').click(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+            var isValid = true;
+
+            // Validate each form field inside the repeater
+            $('#repeater .repeater-item').each(function () {
+                $(this).find('select, input, textarea').each(function () {
+                    if (!this.checkValidity()) {
+                        isValid = false;
+                        $(this).addClass('is-invalid');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+            });
+
+            if (isValid) {
+                var repeaterData = [];
+
+                // Collect form data
+                $('#repeater .repeater-item').each(function () {
+                    var row = {
+                        BrandDetailId: $(this).find('select[name="BrandDetailId"]').val(),
+                        DeviceModelDetailId: $(this).find('select[name="DeviceModelDetailId"]').val(),
+                        DeviceProcessorDetailId: $(this).find('select[name="DeviceProcessorDetailId"]').val(),
+                        GenerationDetailId: $(this).find('select[name="GenerationDetailId"]').val(),
+                        RAMDetailId: $(this).find('select[name="RAMDetailId"]').val(),
+                        HardDiskDetailId: $(this).find('select[name="HardDiskDetailId"]').val(),
+                        Quantity: $(this).find('input[name="Quantity"]').val(),
+                        Price: $(this).find('input[name="Price"]').val(),
+                        Description: $(this).find('textarea[name="Description"]').val()
+                    };
+                    repeaterData.push(row);
+                });
+
+                // Create hidden input to store repeater data
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'RepeaterData',
+                    value: JSON.stringify(repeaterData)
+                }).appendTo('#po-form');
+
+                // Submit the form explicitly
+                $('#po-form').submit();
+
+            } else {
+                toastr.error('Please fill all required fields.');
+            }
+        });
+
+
+        // Initially toggle the remove button
+        toggleRemoveButton();
+    });
+
+</script>
+<script>
+    
+    function updateTotalAmount() {
+        
+        let totalAmount = 0;
+        let taxableAmount = 0;
+        let Discount = 0;
+        let PersentageAmt = 0;
+
+
+        $('#repeater .repeater-item').each(function () {
+            let qu = parseFloat($(this).find('.Quantity').val()) || 0;
+            let price = parseFloat($(this).find('.Pricedata').val()) || 0;
+            taxableAmount += qu * price;
+        });
+        $("#ActualAmount").val(taxableAmount);
+       
+        $('#TaxableAmountText').text(taxableAmount + ".00");
+        let DiscountType = $("#DiscountType").val();
+        Discount = $("#Discount").val();
+        if (Discount > 0) {
+            if (DiscountType == "1") {
+                PersentageAmt = (taxableAmount * $("#Discount").val()) / 100;
+                taxableAmount = parseFloat(taxableAmount) - parseFloat(PersentageAmt);
+            }
+            if (DiscountType == "2") {
+                PersentageAmt = $("#Discount").val();
+                taxableAmount = parseFloat(taxableAmount) - parseFloat(PersentageAmt);
+            }
+           
+
+        }
+        $("#TaxableAmount").val(taxableAmount);
+       // alert($("#TaxableAmount").val());
+        let tax = (taxableAmount * 9) / 100;
+        totalAmount = parseFloat(taxableAmount) + (2 * parseFloat(tax))
+        
+       
+        //TotalAmmount
+        $('#SGST').text(tax + ".00");
+        $('#CGST').text(tax + ".00");
+        $('#DiscountAmt').text(PersentageAmt + ".00");
+       
+        $("#TotalAmount").val(totalAmount);
+        $('#TotalAmountText').text(totalAmount + ".00");
+    }
+
+    function AccordingtoProcurementType() { 
+        if ($("#ProcurementTypeId").val() == 1) {
+            $("#Warrantydiv").show();
+            $("#Rentdiv").hide();
+        }
+        else { 
+            $("#Warrantydiv").hide();
+            $("#Rentdiv").show();
+        }
+    
+    }
+</script>
+
+
+

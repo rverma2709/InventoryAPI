@@ -1,0 +1,350 @@
+﻿@model Tuple<List<Root.Models.Tables.InventoryUser>, Root.Models.StoredProcedures.SFGetVendorDetails>
+@{
+    Root.Models.Tables.InventoryUser _model = new Root.Models.Tables.InventoryUser();
+    Root.Models.ViewModels.ViewVendorDetail _modeldata = new Root.Models.ViewModels.ViewVendorDetail();
+    IndexModel indexModel = new IndexModel();
+    indexModel.ControllerName = "VendorMaster";
+    indexModel.ActionName = "VendorDetails";
+}
+
+@{
+
+    ViewBag.Title = ViewBag.PageModelName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link href="~/css/tableheader.css" rel="stylesheet" />
+<style type="text/css">
+    .field-validation-error {
+        color: red;
+    }
+</style>
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <div class="page-header">
+            <div class="content-page-header ">
+                <h5>@ViewBag.Title</h5>
+                <div class="list-btn">
+                    <ul class="filter-list">
+                        <li>
+                            <a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="filter"><span class="me-2"><img src="~/assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+                        </li>
+                        <li class>
+                            <div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top" title="download">
+                                <a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="fe fe-download"></i></span></a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <ul class="d-block">
+                                        <li>
+                                            <a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-pdf me-2"></i>PDF</a>
+                                        </li>
+                                        <li>
+                                            <a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-text me-2"></i>CVS</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="print"><span><i class="fe fe-printer"></i></span> </a>
+                        </li>
+                        <li>
+                            <a class="btn btn-import" href="javascript:void(0);"><span><i class="fe fe-check-square me-2"></i>Import</span></a>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_vendor"><i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Vendors</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="filter_inputs" class="card filter-card">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Email</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Phone</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class=" card-table">
+                    <div class="card-body">
+                        <div class="table-responsive" id="tb">
+                          
+                            @await Html.PartialAsync("_VendorDetailTable", Model)
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="toggle-sidebar">
+    <div class="sidebar-layout-filter">
+        <div class="sidebar-header">
+            <h5>Filter</h5>
+            <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
+        </div>
+        <div class="sidebar-body">
+            <form action="#" autocomplete="off">
+
+                <div class="accordion accordion-last" id="accordionMain1">
+                    <div class="card-header-new" id="headingOne">
+                        <h6 class="filter-title">
+                            <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Vendors Filter
+                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                            </a>
+                        </h6>
+                    </div>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample1">
+                        <div class="card-body-chat">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="checkBoxes1">
+                                        <div class="form-custom">
+                                            
+                                            <input type="text" class="form-control" asp-for="Item2.VendorName" placeholder="Vendor Name">
+
+                                            <input type="text" class="form-control" asp-for="Item2.CompanyName" placeholder="Company Name">
+                                            <input type="text" class="form-control" asp-for="Item2.ContactNo" placeholder="Phone No">
+                                            <input type="text" class="form-control" asp-for="Item2.EmailId" placeholder="EmailId">
+                                            <input type="text" class="form-control" asp-for="Item2.GSTNo" placeholder="GSTNo">
+                                            
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-buttons">
+                    <a class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary" onclick="OnChangeSelect()">Apply</a>
+                    <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary">
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@await Html.PartialAsync("_AddVendorView", _modeldata)
+
+
+<div class="modal custom-modal fade" id="edit_vendor" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Edit Vendor</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form action="#">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Name</label>
+                                <input type="text" class="form-control" value="John Smith" placeholder="Enter Name">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Email</label>
+                                <input type="text" class="form-control" value="john@example.com" placeholder="Select Date">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Phone Number</label>
+                                <input type="text" class="form-control" value="+1 989-438-3131" placeholder="Enter Reference Number">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-0">
+                                <label>Balance</label>
+                                <input type="text" class="form-control" value="$4200" placeholder="Enter Reference Number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-primary paid-cancel-btn me-2">Cancel</button>
+                    <button type="submit" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal custom-modal fade" id="delete_modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Delete Vendor</h3>
+                    <p>Are you sure want to delete?</p>
+                </div>
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="reset" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Delete</button>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+<div class="modal custom-modal fade" id="add_ledger" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Add Ledger</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form action="#">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Amount</label>
+                                <input type="text" class="form-control" placeholder="Enter Amount">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Date</label>
+                                <div class="cal-icon cal-icon-info">
+                                    <input type="text" class="datetimepicker form-control" placeholder="Select Date">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Reference</label>
+                                <input type="text" class="form-control" placeholder="Enter Reference Number">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block d-inline-flex align-center mb-0">
+                                <label class="me-5 mb-0">Mode</label>
+                                <div>
+                                    <label class="custom_radio me-3 mb-0">
+                                        <input type="radio" name="payment" checked>
+                                        <span class="checkmark"></span> Credit
+                                    </label>
+                                    <label class="custom_radio mb-0">
+                                        <input type="radio" name="payment">
+                                        <span class="checkmark"></span> Debit
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</button>
+                    <button type="submit" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ChangePage(e, t) {
+        var data = {
+            pageNo: t
+        };
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $('#tb').html(response);
+            },
+            error: function (error) {
+                alert('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+    function CallSort(e, t, a) {
+        debugger;
+        var data = {
+            cols: t,
+            order: a
+        };
+
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $('#tb').html(response);
+            },
+            error: function (error) {
+                alert('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+    function OnChangeSelect() {
+        var data = {
+            VendorName: $("#Item2_VendorName").val(),
+            CompanyName: $("#Item2_CompanyName").val(),
+            ContactNo1: $("#Item2_ContactNo1").val(),
+            EmailId: $("#Item2_EmailId").val(),
+            GSTNo: $("#Item2_GSTNo").val()
+        };
+        $.ajax({
+            url: '@Url.Action(indexModel.ActionName, indexModel.ControllerName)', // Corrected Razor syntax for URL
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                $('#tb').html(response);
+            },
+            error: function (error) {
+                alert('An error occurred: ' + error.responseText);
+            }
+        });
+    }
+</script>
